@@ -4,7 +4,7 @@ import scrapy
 class RecursionSpider(scrapy.Spider):
     name = 'recursion'
     page_number = 2
-    start_urls = ['https://www.jobbank.gc.ca/jobsearch/jobsearch?fper=F&fter=P&page=1&sort=M&fprov=ON#results-list-content']
+    start_urls = ['https://www.jobbank.gc.ca/jobsearch/jobsearch?sort=M&fprov=ON&page=1']
 
     def parse(self, response):
         # Extracting the content using css selectors
@@ -72,7 +72,8 @@ class RecursionSpider(scrapy.Spider):
         if len(business) == 0:
             business = response.css("span.business span[property*='name'] strong::text").extract()
 
-        for item in zip(title, date, location, business, vacancy, status, duration, jobID):
+
+        for item in zip(title, date, location, business, vacancy, status, duration):
             # Create a dictionary to store the scraped info
             scraped_info = {
                 'Title' : item[0],
@@ -81,17 +82,16 @@ class RecursionSpider(scrapy.Spider):
                 'Business' : item[3],
                 'Vacancy' : item[4],
                 'Status' : item[5],
-                'Duration' : item[6],
-                'Job ID' : item[7]
+                'Duration' : item[6]
             }
 
             # Yield or give the scraped info to scrapy
             yield scraped_info
 
             # Next search results
-            next_page = 'https://www.jobbank.gc.ca/jobsearch/jobsearch?fper=F&fter=P&page=' + str(RecursionSpider.page_number) + '&sort=M&fprov=ON#results-list-content'
+            next_page = 'https://www.jobbank.gc.ca/jobsearch/jobsearch?sort=M&fprov=ON&page=' + str(RecursionSpider.page_number)
 
-            if RecursionSpider.page_number <= 250:
-                # Incrememnt page number
+            if RecursionSpider.page_number <= 750:
+                # Increment page number
                 RecursionSpider.page_number += 1
                 yield response.follow(next_page, callback = self.parse)
