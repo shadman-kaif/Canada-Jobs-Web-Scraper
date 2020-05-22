@@ -14,11 +14,11 @@ class RecursionSpider(scrapy.Spider):
         tag = [str for str in tag if '/jobsearch/jobposting' in str]
         finalTag = ['https://www.jobbank.gc.ca' + tag for tag in tag]
 
+        # Moving onto new tags
         for url in finalTag:
             yield response.follow(url, self.parse2)
             
     def parse2(self, response):                                                                                    
-
         # Extracting the content using css and xpath selectors
         title = response.css('span.noc-title::text').extract()
         date = response.css("span.date::text").extract()
@@ -72,7 +72,7 @@ class RecursionSpider(scrapy.Spider):
         if len(business) == 0:
             business = response.css("span.business span[property*='name'] strong::text").extract()
 
-
+        # Output 
         for item in zip(title, date, location, business, vacancy, status, duration):
             # Create a dictionary to store the scraped info
             scraped_info = {
