@@ -30,7 +30,6 @@ class RecursionSpider(scrapy.Spider):
         hours = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='workHours']::text").extract()
         jobID = response.css('span::text').extract()
 
-        currency = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='currency']::text").extract()
         salary_min_value = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='minValue']::text").extract()
         salary_max_value = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='maxValue']::text").extract()
         salary_unit = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='unitText']::text").extract()
