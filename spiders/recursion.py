@@ -30,11 +30,14 @@ class RecursionSpider(scrapy.Spider):
         hours = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='workHours']::text").extract()
         jobID = response.css('span::text').extract()
 
+        currency = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='currency']::text").extract()
+        salary_min_value = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='minValue']::text").extract()
+        salary_max_value = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='maxValue']::text").extract()
+        salary_unit = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='unitText']::text").extract()
+
         # Removing unnecessary whitespace and words from strings in list
         date = map(lambda s: s.strip(), date)
         date = map(lambda s: s.strip(" Posted on "), date)
-        hours = map(lambda s: s.strip(), hours)
-        hours = map(lambda s: s.strip("hours per week"), hours)
 
         # Removing the comma at the end of the location as it's extracted with a comma at the end
         location = [x[:-1] for x in location]
@@ -72,8 +75,28 @@ class RecursionSpider(scrapy.Spider):
         if len(business) == 0:
             business = response.css("span.business span[property*='name'] strong::text").extract()
 
+        if len(hours) == 0:
+            hours = [""]
+
+        hours = map(lambda s: s.strip("hours per week"), hours)
+
+        sal_max = ["$" + salary_max_value for salary_max_value in salary_max_value]
+        sal_min = ["$" + salary_min_value for salary_min_value in salary_min_value]
+
+
+        if len(salary_max_value) == 0:
+            salary_max_value = [""]
+        
+        if len(salary_min_value) == 0:
+            salary_min_value = [""]
+
+        if len(salary_unit) == 0:
+            salary_unit = [""]
+        
+        salary_unit = [x.lower() for x in salary_unit]
+
         # Output 
-        for item in zip(title, date, location, business, vacancy, status, duration):
+        for item in zip(title, date, location, business, vacancy, status, duration, jobID, hours, sal_min, sal_max, salary_unit):
             # Create a dictionary to store the scraped info
             scraped_info = {
                 'Title' : item[0],
@@ -82,7 +105,12 @@ class RecursionSpider(scrapy.Spider):
                 'Business' : item[3],
                 'Vacancy' : item[4],
                 'Status' : item[5],
-                'Duration' : item[6]
+                'Duration' : item[6],
+                'Job ID' : item[7],
+                'Hours per Week' : item[8],
+                'Minimum Salary' : item[9],
+                'Maximum Salary' : item[10],
+                'Duration of Salary' : item[11]
             }
 
             # Yield or give the scraped info to scrapy
