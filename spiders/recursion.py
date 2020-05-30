@@ -29,6 +29,7 @@ class RecursionSpider(scrapy.Spider):
         duration = response.css('span.attribute-value::text').extract()
         hours = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='workHours']::text").extract()
         jobID = response.css('span::text').extract()
+        noc_number = response.css("span.noc-no::text").extract()
 
         salary_min_value = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='minValue']::text").extract()
         salary_max_value = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='maxValue']::text").extract()
@@ -82,20 +83,21 @@ class RecursionSpider(scrapy.Spider):
         sal_max = ["$" + salary_max_value for salary_max_value in salary_max_value]
         sal_min = ["$" + salary_min_value for salary_min_value in salary_min_value]
 
-
-        if len(salary_max_value) == 0:
-            salary_max_value = [""]
+        if len(sal_max) == 0:
+            sal_max = [""]
         
-        if len(salary_min_value) == 0:
-            salary_min_value = [""]
+        if len(sal_min) == 0:
+            sal_min = [""]
 
         if len(salary_unit) == 0:
             salary_unit = [""]
         
         salary_unit = [x.lower() for x in salary_unit]
 
+        noc_number = map(lambda s: s.strip("NOC "), noc_number)
+
         # Output 
-        for item in zip(title, date, location, business, vacancy, status, duration, jobID, hours, sal_min, sal_max, salary_unit):
+        for item in zip(title, date, location, business, vacancy, status, duration, jobID, hours, sal_min, sal_max, salary_unit, noc_number):
             # Create a dictionary to store the scraped info
             scraped_info = {
                 'Title' : item[0],
@@ -109,7 +111,8 @@ class RecursionSpider(scrapy.Spider):
                 'Hours per Week' : item[8],
                 'Minimum Salary' : item[9],
                 'Maximum Salary' : item[10],
-                'Duration of Salary' : item[11]
+                'Duration of Salary' : item[11],
+                'NOC Number' : item[12]
             }
 
             # Yield or give the scraped info to scrapy
