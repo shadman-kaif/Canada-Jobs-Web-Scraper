@@ -2,11 +2,9 @@
 import pandas as pd
 import glob
 
-
 #### Combine, concatenate, join multiple excel files in a given folder into one dataframe, Each excel files having multiple sheets
 #### All sheets in a single Excel file are first combined into a dataframe, then all the Excel Books in the folder
 #### Are combined to make a single data frame. The combined data frame is the exported into a single Excel sheet.
-
 
 # path = r'C:\Users\Tchamna\Downloads\UTRC_DATA\495GowanusSpeedData20152016'
 path = r"C:\Users\KhanAbd\OneDrive - Government of Ontario\Desktop"
