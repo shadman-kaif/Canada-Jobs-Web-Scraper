@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
+import re
 
 class RecursionSpider(scrapy.Spider):
     name = 'recursion'
@@ -52,30 +53,7 @@ class RecursionSpider(scrapy.Spider):
         # Status and duration cleaning
         del status[1]
         del duration[0]
-        duration = [''.join(item.split()) for item in duration]
-
-        # Checking for 146 string in Job ID
-        jobID = [str for str in jobID if "147" in str]
-        if len(jobID) == 0:
-            jobID = response.css('span::text').extract()
-            jobID = [str for str in jobID if "146" in str]
-        if len(jobID) == 0:
-            jobID = response.css('span::text').extract()
-            jobID = [str for str in jobID if "145" in str]
-        if len(jobID) == 0:
-            jobID = response.css('span::text').extract()
-            jobID = [str for str in jobID if "144" in str]
-        if len(jobID) == 0:
-            jobID = response.css('span::text').extract()
-            jobID = [str for str in jobID if "143" in str]
-        if len(jobID) == 0:
-            jobID = response.css('span::text').extract()
-            jobID = [str for str in jobID if "142" in str]
-        if len(jobID) == 0:
-            jobID = response.css('span::text').extract()
-            jobID = [str for str in jobID if "148" in str]
-        if len(jobID) == 0:
-            jobID = [""]
+        duration =  map(lambda s: s.strip(), duration)
 
         if len(business) == 0:
             business = response.css("span.business span[property*='name'] strong::text").extract()
@@ -107,14 +85,17 @@ class RecursionSpider(scrapy.Spider):
         
         salary_unit = [x.lower() for x in salary_unit]
 
-        if len(location) == 0:
-            response.css("p.nomargin::text").extract()
-            location = [''.join(item.split()) for item in location]
+        #if len(location) == 0:
+        #    response.css("p.nomargin::text").extract()
+        #    location = [''.join(item.split()) for item in location]
 
         if len(location) == 0:
             location = response.css("span.city::text").extract()
+            location = [str for str in location if "\tON" in str]
             location = [''.join(item.split()) for item in location]
-            location = [str for str in location if ",ON" in str]
+            location = [s.replace(',ON', '') for s in location]
+            location = re.sub(r"(\w)([A-Z])", r"\1 \2", location[0])
+            location = location.split(',')
 
         if len(location) == 0: 
             location = [""]
@@ -124,6 +105,29 @@ class RecursionSpider(scrapy.Spider):
 
         if len(postal_code) == 0:
             postal_code = [""]
+
+        # Checking for 146 string in Job ID
+        jobID = [str for str in jobID if "147" in str]
+        if len(jobID) == 0:
+            jobID = response.css('span::text').extract()
+            jobID = [str for str in jobID if "146" in str]
+        if len(jobID) == 0:
+            jobID = response.css('span::text').extract()
+            jobID = [str for str in jobID if "145" in str]
+        if len(jobID) == 0:
+            jobID = response.css('span::text').extract()
+            jobID = [str for str in jobID if "144" in str]
+        if len(jobID) == 0:
+            jobID = response.css('span::text').extract()
+            jobID = [str for str in jobID if "143" in str]
+        if len(jobID) == 0:
+            jobID = response.css('span::text').extract()
+            jobID = [str for str in jobID if "142" in str]
+        if len(jobID) == 0:
+            jobID = response.css('span::text').extract()
+            jobID = [str for str in jobID if "148" in str]
+        if len(jobID) == 0:
+            jobID = [""]
 
         # Output 
         for item in zip(title, date, location, business, vacancy, status, duration, jobID, hours, sal_min, sal_max, salary_unit, noc_number):
