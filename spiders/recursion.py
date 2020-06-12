@@ -35,9 +35,12 @@ class RecursionSpider(scrapy.Spider):
         salary_max_value = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='maxValue']::text").extract()
         salary_unit = response.css("ul.job-posting-brief.colcount-lg-2 span[property*='unitText']::text").extract()
 
+        postal_code = response.css("p.nomargin::text").extract()
+
         # Removing unnecessary whitespace and words from strings in list
         date = map(lambda s: s.strip(), date)
         date = map(lambda s: s.strip(" Posted on "), date)
+        postal_code = [x.strip(' ') for x in postal_code]
 
         # Removing the comma at the end of the location as it's extracted with a comma at the end
         location = [x[:-1] for x in location]
@@ -95,6 +98,16 @@ class RecursionSpider(scrapy.Spider):
         salary_unit = [x.lower() for x in salary_unit]
 
         noc_number = map(lambda s: s.strip("NOC "), noc_number)
+
+        if len(location) == 0:
+            location = [""]
+
+        if len(vacancy) == 0: 
+            vacancy = [""]
+
+        if len(postal_code) == 0:
+            postal_code = [""]
+
 
         # Output 
         for item in zip(title, date, location, business, vacancy, status, duration, jobID, hours, sal_min, sal_max, salary_unit, noc_number):
