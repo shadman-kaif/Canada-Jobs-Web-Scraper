@@ -14,6 +14,7 @@ BOT_NAME = 'recursion'
 SPIDER_MODULES = ['recursion.spiders']
 NEWSPIDER_MODULE = 'recursion.spiders'
 
+# DOWNLOAD_DELAY = 2
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'recursion (+http://www.yourdomain.com)'
