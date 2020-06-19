@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import scrapy
-import re
 
 class RecursionSpider(scrapy.Spider):
     name = 'recursion'
