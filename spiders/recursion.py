@@ -85,10 +85,6 @@ class RecursionSpider(scrapy.Spider):
         
         salary_unit = [x.lower() for x in salary_unit]
 
-        #if len(location) == 0:
-        #    response.css("p.nomargin::text").extract()
-        #    location = [''.join(item.split()) for item in location]
-
         if len(location) == 0:
             location = response.css("span.city::text").extract()
             location = [str for str in location if "\tON" in str]
