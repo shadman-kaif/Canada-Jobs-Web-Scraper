@@ -47,8 +47,11 @@ class RecursionSpider(scrapy.Spider):
         location = [x[:-1] for x in location]
 
         # Going through span tag to find the vacancy number
-        vacancy = [str for str in vacancy if "Vacanc" in str]
-        vacancy.remove('Vacancies') # Remove one instance of "Vacancies" string that comes in extract before
+        vacancy = [str for str in vacancy if "vacanc" in str]
+        if vacancy[0] == "Vacancies":
+            vacancy.remove('Vacancies') # Remove one instance of "Vacancies" string that comes in extract before
+        elif vacancy[0] == "vacancies":
+            vacancy.remove('vacancies') # Remove one instance of "vacancies" string that comes in extract before
 
         # Status and duration cleaning
         del status[1]
