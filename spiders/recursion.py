@@ -102,6 +102,21 @@ class RecursionSpider(scrapy.Spider):
         if len(postal_code) == 0:
             postal_code = [""]
 
+        if len(business) == 0:
+            business = [""]
+
+        if bool(date) == False:
+            date = [""]
+
+        if bool(noc_number) == False:
+            noc_number = [""]
+
+        if bool(hours) == False:
+            hours = [""]
+        
+        if bool(duration) == False:
+            duration = [""]
+
         # Checking for prefix string in Job ID
         jobID = [str for str in jobID if "147" in str]
         if len(jobID) == 0:
