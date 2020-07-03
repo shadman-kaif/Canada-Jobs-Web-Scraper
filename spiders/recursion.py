@@ -102,11 +102,14 @@ class RecursionSpider(scrapy.Spider):
         if len(postal_code) == 0:
             postal_code = [""]
 
-        # Checking for 146 string in Job ID
+        # Checking for prefix string in Job ID
         jobID = [str for str in jobID if "147" in str]
         if len(jobID) == 0:
             jobID = response.css('span::text').extract()
             jobID = [str for str in jobID if "146" in str]
+        if len(jobID) == 0:
+            jobID = response.css('span::text').extract()
+            jobID = [str for str in jobID if "149" in str]
         if len(jobID) == 0:
             jobID = response.css('span::text').extract()
             jobID = [str for str in jobID if "145" in str]
