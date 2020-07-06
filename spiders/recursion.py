@@ -50,6 +50,11 @@ class RecursionSpider(scrapy.Spider):
         vacancy = [str for str in vacancy if "vacanc" in str]
         vacancy.remove('vacancies') # Remove one instance of "vacancies" string that comes in extract before
 
+        # Extract the number of vacancies as a string in list 
+        vacancy = [int(word) for word in vacancy[0].split() if word.isdigit()]
+        vacancy = int(''.join(map(str,vacancy)))
+        vacancy = [str(vacancy)]
+
         # Status and duration cleaning
         del status[1]
         del duration[0]
